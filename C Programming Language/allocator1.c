@@ -18,8 +18,9 @@ void* alocar_espaco(int quantidade) {
 	}
 }
 
-void limpar_galpao() {
-	marcador_global = 0;
+void limpar_galpao(void* chave_do_cliente) {
+	int* esconderijo = (int*)chave_do_cliente - 1;
+	int tamanho_liberado = esconderijo[0];
 }
 
 void* meu_terreno = alocar_espaco(150);
