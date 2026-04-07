@@ -27,37 +27,34 @@ void* alocar_espaco(size_t quantidade) {
 	
 	if (bloco != NULL) {
 		bloco -> livre = 0;
-		void* chave_do_cliente = (void*)(bloco + 1);
-		return chave_do_cliente;
-	}
-	
-	void* novo_terreno = sbrk(sizeof(struct bloco_meta) + quantidade);
-	struct bloco_meta* novo_bloco = (struct bloco_meta*)novo_terreno;
-	
-	novo_bloco -> tamanho = quantidade;
-	novo_bloco -> livre = 0;
-	novo_bloco -> proximo = NULL;
-	
-	printf("\n--- NOVO BLOCO CRIADO ---\n");
-	
-	if (inicio_da_lista == NULL) {
-		inicio_da_lista = novo_bloco;
-	}
-	else {
-		ultimo_bloco -> proximo = novo_bloco;
-		printf("O bloco anterior na fila aponta para: %p\n", (void*)ultimo_bloco -> proximo);
-	}
+		printf("\n--- BLOCO RECICLADO ---");
+		
+	} else {
+		void* novo_terreno = sbrk(sizeof(struct bloco_meta) + quantidade);
+		bloco = (struct bloco_meta*)novo_terreno;
+		
+		bloco -> tamanho = quantidade;
+		bloco -> livre = 0;
+		bloco -> proximo = NULL;
+		
+		printf("\n--- NOVO BLOCO CRIADO ---\n");
+		
+		if (inicio_da_lista == NULL) {
+			inicio_da_lista = bloco;
+		} else {
+			ultimo_bloco -> proximo = bloco;
+			printf("O bloco anterior na fila aponta para: %p\n", (void*)ultimo_bloco -> proximo);
+		}
 
-	ultimo_bloco = novo_bloco;
+		ultimo_bloco = bloco;
+	}
+	void* chave_do_cliente = (void*)(bloco + 1);
+		
+	printf("Coordenada do Bloco (struct): %p\n", (void*)bloco);
+	printf("Tamanho Solicitado: %zu bytes\n", bloco -> tamanho);
+	printf("Coordenada da Chave do Cliente: %p\n", (void*)chave_do_cliente);
 	
-	void* chave_do_cliente = (void*)(novo_bloco + 1);
-	
-    printf("Coordenada do Bloco (struct): %p\n", (void*)novo_bloco);
-    printf("Tamanho Solicitado: %zu bytes\n", novo_bloco->tamanho);
-    printf("Coordenada da Chave do Cliente: %p\n", (void*)chave_do_cliente);
-	
-    printf("-------------------------\n");
-	
+	printf("-------------------------\n");
 	return chave_do_cliente;
 }
 
